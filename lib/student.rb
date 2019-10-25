@@ -12,7 +12,8 @@ def initialize
 end
 
 def self.create_table
-  
+  SELECT * FROM students
+
   DB = {:conn => SQLite3::Database.new("db/students.db")}
 end
 
