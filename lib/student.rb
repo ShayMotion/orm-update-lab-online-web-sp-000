@@ -3,34 +3,56 @@ require_relative "../config/environment.rb"
 class Student
   attr_accessor :id, :name, :grade
   @@all = []
-end
+  
+ def initialize(id=nil, name, grade)
+@id, @name, @grade = id, name, grade
 
-def initialize
-  @id = id=NIL
-  @name = name
-  @grade = grade
-end
+  end
+  
+    def self.create_table
+      sql = <<-SQL
+      CREATE TABLE IF NOT EXISTS students (
+      id INTEGER PRIMARY KEY,
+      name TEXT,
+      body TEXT
+      )
+      SQL
+      DB[:conn].execute(sql)
+     end  
+      
+  def self.drop_table 
+    DB[:conn].execute("DROP TABLE IF EXISTS students")
+  end
+  
+   def save
+    if self.id
+      self.update
+    else
+      sql = <<-SQL 
+        INSERT INTO students (name, grade)
+        VALUES (?,?)
+      SQL
+  end    
+end  
+     
+       DB[:conn].execute(sql, self.name, self.grade)
+      @id = DB[:conn].execute("SELECT last_insert_rowid() FROM students")[0][0]
+    end
+  end
+    
+    def self.create(name:, grade:)
+    student = Student.new(name, grade)
+    student.save
+    student
+  end
+end  
 
-def self.create_table
-  SELECT * FROM students
-
-  DB = {:conn => SQLite3::Database.new("db/students.db")}
-end
-
-def self.drop_table
-end
-
-def save
+def self.new_from_db
   
 end
 
-def self.create
-end
-
-def self.new_from_db
-end
-
-def self.find_by_name
+def self.find_by_name(name)
+  
 end
 
 def update
